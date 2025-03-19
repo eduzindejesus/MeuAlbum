@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu album</title>
+   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+  <style>
+
+.header-title {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+    .titulo {
+      text-align: center;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.5rem;
+      color: #E8AEB7;
+      padding: 20px;
+      margin-top: 50px;
+    }
+nav a {
+    transition: color 0.3s ease-in-out;
+}
+ 
+    /* Estilos da Galeria */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      padding: 20px;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Estilos do Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      cursor: zoom-in;
+    }
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+      cursor: zoom-in;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      opacity: 0.7;
+      background: transparent;
+      border: none;
+    }
+    .close-btn:hover {
+      opacity: 1;
+    }
+
+    /* Botão Voltar ao Topo */
+    .back-to-top-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-color: #F8E1C2;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .back-to-top-btn:hover {
+      background-color: #E8AEB7;
+    }
+
+    /* Botões de Navegação de Imagem (direita e esquerda) */
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 30px;
+      color: white;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .prev-btn {
+      left: 20px;
+    }
+
+    .next-btn {
+      right: 20px;
+    }
+
+    /* Elemento Sentinela */
+    #sentinel {
+      height: 1px;
+    }
+
+    /* Estilo do ícone de zoom */
+    .zoom-in {
+      cursor: zoom-in;
+    }
+    .zoom-out {
+      cursor: zoom-out;
+    }
+
+    /* Transparência do botão "Voltar ao topo" no fullscreen */
+    .fullscreen-active .back-to-top-btn {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+ /* Efeito de hover na logo */
+        .logo:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Ajuste da imagem para telas menores */
+        @media (max-width: 768px) {
+            header img {
+                object-position: left;
+            }
+        }
+
+.image-name {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+  }
+    
+  </style>
+
+
+</head>
+<body class="bg-gray-100 font-montserrat">
+
+<!-- Cabeçalho -->
+  <header class="relative w-full">
+        <img src="https://lh3.google.com/u/0/d/1JHBUFSGqA2siKKHVVX-muTyS3exV0IwZ=w2000-h2350-iv1?auditContext=forDisplay"  loading="lazy"
+            alt="Foto do casal em um momento romântico" 
+            class="w-full h-64 sm:h-80 md:h-96 object-cover object-[0%_65%] rounded-b-lg"> 
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center rounded-b-lg">
+            <h1 class="text-3xl sm:text-4xl font-great-vibes text-[#F8E1C2] tracking-wide">Vitoria & Eduardo</h1>
+            <p class="text-white text-lg sm:text-xl mt-2">Acompanhe parte da nossa trajetória</p>
+        </div>
+  </header>
+
+  <!-- Menu de Navegação -->
+  <nav class="bg-white shadow-md py-4">
+    <div class="container mx-auto flex flex-wrap justify-between items-center px-4">
+        <h1 class="text-3xl font-great-vibes text-gray-900">V & E</h1>
+        <button id="menu-btn" class="text-gray-800 md:hidden focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+        <ul id="menu" class="hidden md:flex space-x-4 w-full md:w-auto mt-4 md:mt-0 text-center md:text-left flex-col md:flex-row transition-all duration-300 ease-in-out">
+            <li><a class="block py-2 md:py-0 text-gray-800 hover:text-gray-600" href="index.html">Início</a></li>
+            <!-- <li><a class="block py-2 md:py-0 text-gray-800 hover:text-gray-600" href="#">Sobre</a></li> -->
+           <!-- <li><a class="block py-2 md:py-0 text-gray-800 hover:text-gray-600" href="#">Contato</a></li> -->
+        </ul>
+    </div>
+  </nav>
+
+
+  <h1 id="titulo" style="display: none;">Biblioteca de Imagens (<span id="imageCount">0</span> imagens)</h1>
+  <div class="gallery" id="gallery"></div>
+  
+  <!-- Sentinela para carregamento incremental -->
+  <div id="sentinel"></div>
+
+<!-- Modal para exibir imagens ampliadas -->
+<div id="imageModal" class="modal" onclick="closeModal(event)">
+  <button class="close-btn" onclick="closeModal(event)">X</button>
+  <button class="nav-btn prev-btn" onclick="navigateImage('prev', event)">&lt;</button>
+<button class="nav-btn next-btn" onclick="navigateImage('next', event)">&gt;</button>
+  <img id="modalImg" src="" alt="Imagem ampliada" onclick="zoomImage(event)">
+<div id="imageName" class="image-name"></div> <!-- Nome da imagem -->
+</div>
+
+  <!-- Botão voltar ao topo -->
+  <button id="top-btn" class="fixed bottom-4 right-4 bg-[#D4AF37] text-white px-4 py-2 rounded-full shadow-lg hidden">
+    ↑
+</button>
+
+
+  <script>
+  document.getElementById("menu-btn").addEventListener("click", function() {
+            let menu = document.getElementById("menu");
+            menu.classList.toggle("hidden");
+            menu.classList.toggle("flex");
+            menu.classList.toggle("flex-col");	
+            menu.classList.toggle("items-center");
+        });
+
+const API_KEY = 'AIzaSyD3prFbJ5RPQarDpF2VpyowBczq_8YpcBM'; //ChaveAPI	
+const FOLDER_ID = '1dAyJn5pjYDgR1kk5tGcI63n1rFvE-arX'; //LinkDrive
+
+
+let nextPageToken = null;
+let isLoading = false;
+let imageCount = 0;
+let currentImageIndex = -1;
+let images = [];
+let zoomLevel = 1;
+
+async function fetchAllImages(pageToken = '') {
+  if (isLoading) return;
+  isLoading = true;
+
+  let allFiles = [];
+  let nextPage = pageToken;
+  
+  try {
+    do {
+      const url = `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}&fields=nextPageToken,files(id,name,mimeType)&pageSize=100&pageToken=${nextPage || ''}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.files) {
+        allFiles = allFiles.concat(data.files.filter(file => file.mimeType.startsWith('image/')));
+      }
+
+      nextPage = data.nextPageToken; // Atualiza o nextPageToken diretamente aqui
+
+    } while (nextPage); // Continua até não haver mais páginas
+
+    // Ordenação numérica dos arquivos
+    function extractNumber(filename) {
+      let match = filename.match(/\d+/);
+      return match ? parseInt(match[0], 10) : Infinity;
+    }
+    allFiles.sort((a, b) => extractNumber(a.name) - extractNumber(b.name));
+
+    // Exibição das imagens na galeria
+    const gallery = document.getElementById('gallery');
+    allFiles.forEach(file => {
+      const img = document.createElement('img');
+      img.dataset.src = `https://lh3.googleusercontent.com/d/${file.id}=s800`;
+      img.alt = file.name;
+      img.loading = 'lazy';
+      img.onclick = () => openModal(`https://lh3.googleusercontent.com/d/${file.id}=s2000`, file.name);
+
+      const galleryItem = document.createElement('div');
+      galleryItem.appendChild(img);
+      gallery.appendChild(galleryItem);
+
+      img.onload = () => img.src = img.dataset.src;
+      img.src = img.dataset.src;
+
+      images.push({ src: img.dataset.src, name: file.name });
+    });
+
+  } catch (error) {
+    console.error('Erro ao buscar imagens:', error);
+  } finally {
+    isLoading = false;
+  }
+}
+
+
+// Chamada da função ao carregar a página
+fetchAllImages();
+
+
+
+
+
+// Infinite Scroll: Carregar mais imagens ao rolar para baixo
+window.addEventListener('scroll', () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 && nextPage) {
+    fetchImages(true);
+  }
+});
+
+
+
+
+// Abrir modal e bloquear scroll da página
+function openModal(src, imageName) {
+  const modalImg = document.getElementById('modalImg');
+ const imageNameDiv = document.getElementById('imageName'); // Elemento do nome
+
+  modalImg.src = src;
+imageNameDiv.textContent = imageName; // Define o nome da imagem no modal
+
+  document.getElementById('imageModal').style.display = 'flex';
+  document.body.classList.add('fullscreen-active');
+  document.body.style.overflow = 'hidden'; // Impede o scroll da página
+  currentImageIndex = images.findIndex(image => image.name === imageName);
+  
+  zoomLevel = 1;
+  modalImg.style.transform = `scale(${zoomLevel})`;
+
+//  if (currentImageIndex === images.length - 2) {
+//    loadMoreImages();
+  //}
+}
+
+// Fechar modal e restaurar scroll da página
+function closeModal(event) {
+  event.stopPropagation(); // Impede que o clique no modal feche a imagem
+  document.getElementById('imageModal').style.display = 'none';
+  document.body.classList.remove('fullscreen-active');
+  document.body.style.overflow = ''; // Restaura o scroll da página
+}
+
+ document.querySelector('.close-btn').addEventListener('click', closeModal);
+
+
+// Zoom no clique do mouse
+function zoomImage(event) {
+  event.stopPropagation(); // Impede que o clique na imagem feche o modal
+  zoomLevel = zoomLevel === 1 ? 4 : 1; // Alterna entre 1x e 4x
+  event.target.style.transform = `scale(${zoomLevel})`;
+}
+
+// Zoom no scroll do mouse no modal
+document.getElementById('modalImg').addEventListener('wheel', (event) => {
+  event.preventDefault(); // Impede o scroll da página ao usar o zoom
+  let scale = zoomLevel;
+
+  if (event.deltaY < 0) {
+    scale = Math.min(scale + 0.2, 4); // Limita o zoom máximo a 4x
+  } else {
+    scale = Math.max(scale - 0.2, 1); // Limita o zoom mínimo a 1x
+  }
+
+  zoomLevel = scale;
+  event.target.style.transform = `scale(${zoomLevel})`;
+});
+
+// Voltar ao topo
+let topButton = document.getElementById("top-btn");
+window.addEventListener("scroll", function() {
+    if (window.scrollY > 200) {
+        topButton.classList.remove("hidden");
+    } else {
+        topButton.classList.add("hidden");
+    }
+});
+
+topButton.addEventListener("click", function() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+
+// Navegação entre imagens (esquerda/direita)
+function navigateImage(direction, event) {
+  event.stopPropagation(); // Impede que o clique no botão de navegação feche o modal
+  
+  // Evitar navegar para fora do índice válido
+  if (direction === 'prev') {
+    if (currentImageIndex > 0) {
+      currentImageIndex--;
+    } else {
+      currentImageIndex = images.length - 1; // Volta para a última imagem
+    }
+  } else if (direction === 'next') {
+    if (currentImageIndex < images.length - 1) {
+      currentImageIndex++;
+    } else {
+      currentImageIndex = 0; // Volta para a primeira imagem
+    }
+  }
+
+  openModal(images[currentImageIndex].src, images[currentImageIndex].name);
+}
+
+
+// Adicionando event listeners para os botões de navegação
+document.querySelector('.prev-btn').addEventListener('click', (event) => {
+  navigateImage('prev', event);
+});
+
+document.querySelector('.next-btn').addEventListener('click', (event) => {
+  navigateImage('next', event);
+});
+
+// Permite navegação por teclas
+window.addEventListener('keydown', (event) => {
+  if (document.getElementById('imageModal').style.display === 'flex') {
+    if (event.key === "ArrowLeft") {
+      navigateImage('prev', event);
+    } else if (event.key === "ArrowRight") {
+      navigateImage('next', event);
+    }
+    if (event.key === "Escape") {
+      closeModal(event);
+    }
+  }
+});
+
+
+const sentinel = document.getElementById('sentinel');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      if (nextPageToken && !isLoading) {
+        fetchAllImages(nextPageToken);
+      }
+    }
+  });
+});
+observer.observe(sentinel);
+
+
+
+  </script>
+
+<footer class="bg-gray-800 text-white py-6 mt-12 text-center">
+  <p>© 2025 V e E. Todos os direitos reservados.</p>
+</footer>
+
+
+
+</body>
+</html>
